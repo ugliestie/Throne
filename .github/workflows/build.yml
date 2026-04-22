@@ -18,9 +18,6 @@ jobs:
           - cross_os: linux
             cross_arch: amd64
             go_version: "1.25.9"
-          - cross_os: linux
-            cross_arch: arm64
-            go_version: "1.25.9"
       fail-fast: false
     runs-on: ${{ matrix.cross_os == 'linux' && 'ubuntu-22.04' || 'macos-latest' }}
     env:
@@ -103,18 +100,6 @@ jobs:
             qt_version: "6.11.0"
             target: x86_64
             dest_suffix: linux-amd64
-          - platform: ubuntu-22.04
-            qt_version: "6.2.0"
-            target: x86_64
-            dest_suffix: linux-amd64-system-qt
-          - platform: ubuntu-24.04-arm
-            qt_version: "6.11.0"
-            target: aarch64
-            dest_suffix: linux-arm64
-          - platform: ubuntu-22.04-arm
-            qt_version: "6.2.0"
-            target: aarch64
-            dest_suffix: linux-arm64-system-qt
       fail-fast: false
     runs-on: ${{ matrix.platform }}
     env:
