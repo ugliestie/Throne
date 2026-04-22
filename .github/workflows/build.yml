@@ -15,32 +15,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - cross_os: windows
-            cross_arch: amd64
-            go_version: "1.25.9"
-          - cross_os: windows
-            cross_arch: arm64
-            go_version: "1.25.9"
           - cross_os: linux
             cross_arch: amd64
             go_version: "1.25.9"
           - cross_os: linux
             cross_arch: arm64
-            go_version: "1.25.9"
-          - cross_os: darwin
-            cross_arch: amd64
-            go_version: "1.25.9"
-          - cross_os: darwin
-            cross_arch: arm64
-            go_version: "1.25.9"
-          - cross_os: darwinlegacy
-            cross_arch: amd64
-            go_version: "1.25.9"
-          - cross_os: windowslegacy
-            cross_arch: amd64
-            go_version: "1.25.9"
-          - cross_os: windowslegacy
-            cross_arch: 386
             go_version: "1.25.9"
       fail-fast: false
     runs-on: ${{ matrix.cross_os == 'linux' && 'ubuntu-22.04' || 'macos-latest' }}
@@ -120,14 +99,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - platform: windows-latest
-            qt_version: "6.11.0"
-            target: x64
-            dest_suffix: windows-amd64
-          - platform: windows-11-arm
-            qt_version: "6.11.0"
-            target: arm64
-            dest_suffix: windows-arm64
           - platform: ubuntu-22.04
             qt_version: "6.11.0"
             target: x86_64
@@ -144,26 +115,6 @@ jobs:
             qt_version: "6.2.0"
             target: aarch64
             dest_suffix: linux-arm64-system-qt
-          - platform: macos-latest
-            qt_version: "6.11.0"
-            target: x86_64
-            dest_suffix: darwin-amd64
-          - platform: macos-latest
-            qt_version: "6.11.0"
-            target: arm64
-            dest_suffix: darwin-arm64
-          - platform: macos-latest
-            qt_version: "6.4.3"
-            target: x86_64
-            dest_suffix: darwinlegacy-amd64
-          - platform: windows-latest
-            qt_version: "6.2.13"
-            target: x64
-            dest_suffix: windowslegacy-amd64
-          - platform: windows-latest
-            qt_version: "6.2.13"
-            target: x86
-            dest_suffix: windowslegacy-386
       fail-fast: false
     runs-on: ${{ matrix.platform }}
     env:
@@ -315,48 +266,6 @@ jobs:
           zip -9 -r Throne-${{ github.event.inputs.tag }}-linux-arm64.zip Throne
           rm -rf Throne
           ####
-          mv ThroneSetup.exe Throne-${{ github.event.inputs.tag }}-windows64-installer.exe
-          mv windows-amd64 Throne
-          mv Throne/Throne.pdb debug/Throne-${{ github.event.inputs.tag }}-windows-amd64.pdb
-          zip -9 -r Throne-${{ github.event.inputs.tag }}-windows64.zip Throne
-          rm -rf Throne
-          ####
-          mv windows-arm64 Throne
-          mv Throne/Throne.pdb debug/Throne-${{ github.event.inputs.tag }}-windows-arm64.pdb
-          zip -9 -r Throne-${{ github.event.inputs.tag }}-windows-arm64.zip Throne
-          rm -rf Throne
-          ####
-          mv windowslegacy-386 Throne
-          mv Throne/Throne.pdb debug/Throne-${{ github.event.inputs.tag }}-windowslegacy-386.pdb
-          zip -9 -r Throne-${{ github.event.inputs.tag }}-windows32.zip Throne
-          rm -rf Throne
-          ####
-          mv windowslegacy-amd64 Throne
-          mv Throne/Throne.pdb debug/Throne-${{ github.event.inputs.tag }}-windowslegacy-amd64.pdb
-          zip -9 -r Throne-${{ github.event.inputs.tag }}-windowslegacy64.zip Throne
-          rm -rf Throne
-          ####
-          mkdir Throne
-          mv darwin-arm64/Throne.app Throne/Throne.app
-          mv Throne/Throne.app/Contents/MacOS/Throne.dSYM debug/Throne-${{ github.event.inputs.tag }}-macos-arm64.dSYM
-          zip -9 --symlinks -r Throne-${{ github.event.inputs.tag }}-macos-arm64.zip Throne
-          rm -rf darwin-arm64
-          rm -rf Throne
-          ####
-          mkdir Throne
-          mv darwin-amd64/Throne.app Throne/Throne.app
-          mv Throne/Throne.app/Contents/MacOS/Throne.dSYM debug/Throne-${{ github.event.inputs.tag }}-macos-amd64.dSYM
-          zip -9 --symlinks -r Throne-${{ github.event.inputs.tag }}-macos-amd64.zip Throne
-          rm -rf darwin-amd64
-          rm -rf Throne
-          ####
-          mkdir Throne
-          mv darwinlegacy-amd64/Throne.app Throne/Throne.app
-          mv Throne/Throne.app/Contents/MacOS/Throne.dSYM debug/Throne-${{ github.event.inputs.tag }}-macoslegacy-amd64.dSYM
-          zip -9 --symlinks -r Throne-${{ github.event.inputs.tag }}-macoslegacy-amd64.zip Throne
-          rm -rf darwinlegacy-amd64
-          rm -rf Throne
-          ####
           zip -9 -r debug-symbols.zip debug
       - name: Uploading Debug Artifact
         uses: actions/upload-artifact@v4.6.2
@@ -366,17 +275,10 @@ jobs:
       - name: Clean Up
         run: |
           cd deployment
-          rm -rf windows-amd64
-          rm -rf windows-arm64
           rm -rf linux-amd64
           rm -rf linux-amd64-system-qt
           rm -rf linux-arm64
           rm -rf linux-arm64-system-qt
-          rm -rf darwin-amd64
-          rm -rf darwin-arm64
-          rm -rf darwinlegacy-amd64
-          rm -rf windowslegacy-amd64
-          rm -rf windowslegacy-386
           rm -rf *.pdb
           rm -rf debug*
       - name: Uploading Artifact
